@@ -37,7 +37,7 @@ namespace WindowsVirtualDesktopHelper {
 			RegisterDefault("theme.icons.iconFG.dark", "white");
 			RegisterDefault("theme.icons.iconBG.light", "white");
 			RegisterDefault("theme.icons.iconFG.light", "black");
-			RegisterDefault("theme.overlay.width", 900, "With width in pixels of the overlay.");
+			RegisterDefault("theme.overlay.width", 1066, "With width in pixels of the overlay.");
 			RegisterDefault("theme.overlay.height", 530, "With height in pixels of the overlay.");
 			RegisterDefault("theme.overlay.font", "Segoe UI Light", "Defines the font name to use for the overlay.");
 			RegisterDefault("theme.overlay.fontSize", 30, "Defines the font size to use for the overlay.");
