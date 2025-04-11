@@ -258,7 +258,7 @@ namespace WindowsVirtualDesktopHelper {
 								form.LabelText = labelText; // Set the property (might still be useful internally)
 								form.DisplayTimeMS = Settings.GetInt("feature.showDesktopSwitchOverlay.duration");
 								// Apply formatting after setting text, passing the full text now
-								form.ApplyTextFormatting(labelText, this.CurrentVDDisplayName, Color.Aqua); // Example color: Aqua
+								form.ApplyTextFormatting(labelText, this.CurrentVDDisplayName, Color.DeepSkyBlue); // Example color: Aqua
 								form.Show(); // Use standard Show() method.
 							}
 						}
