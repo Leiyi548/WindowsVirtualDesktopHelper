@@ -1,9 +1,17 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace WindowsVirtualDesktopHelper {
 	public partial class SwitchNotificationForm : Form {
+
+		// P/Invoke declarations to hide the caret
+		private const int WM_USER = 0x0400;
+		private const int EM_HIDECARET = WM_USER + 21; // Edit control message to hide caret
+
+		[DllImport("user32.dll", CharSet = CharSet.Auto)]
+		private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
 		public string LabelText;
 		public string Position = "middlecenter";
@@ -126,6 +134,8 @@ namespace WindowsVirtualDesktopHelper {
 			} else {
 				this.timerClose.Start();
 			}
+			// Also hide caret when shown, just in case
+			SendMessage(this.richTextBox1.Handle, EM_HIDECARET, IntPtr.Zero, IntPtr.Zero);
 		}
 
 		private void SwitchNotificationForm_Load(object sender, EventArgs e) {
@@ -197,6 +207,9 @@ namespace WindowsVirtualDesktopHelper {
 			// Reset selection to avoid visual artifacts
 			this.richTextBox1.Select(0, 0);
 			this.richTextBox1.DeselectAll(); // Use DeselectAll as well
+
+			// Hide the caret using SendMessage
+			SendMessage(this.richTextBox1.Handle, EM_HIDECARET, IntPtr.Zero, IntPtr.Zero);
 		}
 	}
 }
