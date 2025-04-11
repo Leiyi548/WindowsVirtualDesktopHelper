@@ -1,5 +1,4 @@
-﻿
-namespace WindowsVirtualDesktopHelper {
+﻿namespace WindowsVirtualDesktopHelper {
     partial class SettingsForm {
         /// <summary>
         /// Required designer variable.
@@ -56,11 +55,17 @@ namespace WindowsVirtualDesktopHelper {
             this.checkBoxShowOverlay = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxStartupWithWindows = new System.Windows.Forms.CheckBox();
+            this.labelExamName = new System.Windows.Forms.Label();
+            this.textBoxExamName = new System.Windows.Forms.TextBox();
+            this.labelExamDate = new System.Windows.Forms.Label();
+            this.dateTimePickerExamDate = new System.Windows.Forms.DateTimePicker();
+            this.groupBoxExamSettings = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBoxExamSettings.SuspendLayout();
             this.SuspendLayout();
             // 
             // checkBoxShowPrevNextIcons
@@ -448,12 +453,12 @@ namespace WindowsVirtualDesktopHelper {
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.checkBoxStartupWithWindows);
-            this.groupBox2.Location = new System.Drawing.Point(22, 602);
+            this.groupBox2.Location = new System.Drawing.Point(22, 744);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(6);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(6);
             this.groupBox2.Size = new System.Drawing.Size(757, 89);
-            this.groupBox2.TabIndex = 3;
+            this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Settings";
             // 
@@ -469,11 +474,66 @@ namespace WindowsVirtualDesktopHelper {
             this.checkBoxStartupWithWindows.UseVisualStyleBackColor = true;
             this.checkBoxStartupWithWindows.CheckedChanged += new System.EventHandler(this.checkBoxStartupWithWindows_CheckedChanged);
             // 
+            // labelExamName
+            //
+            this.labelExamName.AutoSize = true;
+            this.labelExamName.Location = new System.Drawing.Point(28, 35);
+            this.labelExamName.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelExamName.Name = "labelExamName";
+            this.labelExamName.Size = new System.Drawing.Size(121, 25);
+            this.labelExamName.TabIndex = 0;
+            this.labelExamName.Text = "Exam Name:";
+            //
+            // textBoxExamName
+            //
+            this.textBoxExamName.Location = new System.Drawing.Point(160, 32);
+            this.textBoxExamName.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxExamName.Name = "textBoxExamName";
+            this.textBoxExamName.Size = new System.Drawing.Size(570, 31);
+            this.textBoxExamName.TabIndex = 1;
+            this.textBoxExamName.TextChanged += new System.EventHandler(this.textBoxExamName_TextChanged);
+            //
+            // labelExamDate
+            //
+            this.labelExamDate.AutoSize = true;
+            this.labelExamDate.Location = new System.Drawing.Point(28, 80);
+            this.labelExamDate.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelExamDate.Name = "labelExamDate";
+            this.labelExamDate.Size = new System.Drawing.Size(115, 25);
+            this.labelExamDate.TabIndex = 2;
+            this.labelExamDate.Text = "Exam Date:";
+            //
+            // dateTimePickerExamDate
+            //
+            this.dateTimePickerExamDate.Location = new System.Drawing.Point(160, 77);
+            this.dateTimePickerExamDate.Margin = new System.Windows.Forms.Padding(6);
+            this.dateTimePickerExamDate.Name = "dateTimePickerExamDate";
+            this.dateTimePickerExamDate.Size = new System.Drawing.Size(380, 31);
+            this.dateTimePickerExamDate.TabIndex = 3;
+            this.dateTimePickerExamDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dateTimePickerExamDate.ValueChanged += new System.EventHandler(this.dateTimePickerExamDate_ValueChanged);
+            //
+            // groupBoxExamSettings
+            // 
+            this.groupBoxExamSettings.Controls.Add(this.labelExamName);
+            this.groupBoxExamSettings.Controls.Add(this.textBoxExamName);
+            this.groupBoxExamSettings.Controls.Add(this.labelExamDate);
+            this.groupBoxExamSettings.Controls.Add(this.dateTimePickerExamDate);
+            this.groupBoxExamSettings.Location = new System.Drawing.Point(22, 602);
+            this.groupBoxExamSettings.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBoxExamSettings.Name = "groupBoxExamSettings";
+            this.groupBoxExamSettings.Padding = new System.Windows.Forms.Padding(6);
+            this.groupBoxExamSettings.Size = new System.Drawing.Size(757, 130);
+            this.groupBoxExamSettings.TabIndex = 3;
+            this.groupBoxExamSettings.TabStop = false;
+            this.groupBoxExamSettings.Text = "Exam Details";
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(805, 713);
+            this.ClientSize = new System.Drawing.Size(805, 870);
+            this.Controls.Add(this.groupBoxExamSettings);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -496,7 +556,10 @@ namespace WindowsVirtualDesktopHelper {
             this.panel1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBoxExamSettings.ResumeLayout(false);
+            this.groupBoxExamSettings.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -533,5 +596,10 @@ namespace WindowsVirtualDesktopHelper {
 		private System.Windows.Forms.RadioButton radioButtonUseHotKeysToJumpToDesktopCtrlAlt;
 		private System.Windows.Forms.RadioButton radioButtonUseHotKeysToJumpToDesktopCtrl;
 		private System.Windows.Forms.CheckBox checkBoxUseHotKeysToJumpToDesktop;
+        private System.Windows.Forms.Label labelExamName;
+        private System.Windows.Forms.TextBox textBoxExamName;
+        private System.Windows.Forms.Label labelExamDate;
+        private System.Windows.Forms.DateTimePicker dateTimePickerExamDate;
+        private System.Windows.Forms.GroupBox groupBoxExamSettings;
 	}
 }

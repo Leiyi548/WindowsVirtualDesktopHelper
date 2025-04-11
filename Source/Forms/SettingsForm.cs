@@ -53,6 +53,29 @@ namespace WindowsVirtualDesktopHelper {
 			this.radioButtonUseHotKeysToJumpToDesktopCtrl.Checked = Settings.GetString("feature.useHotKeyToJumpToDesktopNumber.hotkey") == "Ctrl";
 			this.radioButtonUseHotKeysToJumpToDesktopCtrlAlt.Checked = Settings.GetString("feature.useHotKeyToJumpToDesktopNumber.hotkey") == "Ctrl + Alt";
 
+			// Load Exam Settings
+			this.textBoxExamName.Text = Settings.GetString("exam.name", "");
+			var examDateStr = Settings.GetString("exam.date", "");
+			if (!string.IsNullOrEmpty(examDateStr) && 
+				DateTime.TryParseExact(examDateStr, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var examDate))
+			{
+				// Check if the parsed date is within the valid range for the DateTimePicker
+				if (examDate >= this.dateTimePickerExamDate.MinDate && examDate <= this.dateTimePickerExamDate.MaxDate)
+				{
+					this.dateTimePickerExamDate.Value = examDate;
+				}
+				else
+				{
+					// Handle date out of range, perhaps log or set to a default like today
+					this.dateTimePickerExamDate.Value = DateTime.Today; // Example: set to today
+				}
+			}
+			else
+			{
+				// Parsing failed or setting is empty, set to today or another default
+				this.dateTimePickerExamDate.Value = DateTime.Today; // Example: set to today
+			}
+
 			checkBoxShowOverlay_CheckedChanged(this, null);
 			checkBoxUseHotKeysToJumpToDesktop_CheckedChanged(this, null);
 		}
@@ -300,5 +323,23 @@ namespace WindowsVirtualDesktopHelper {
 		}
 
 		#endregion
-	}
+
+        #region Exam Settings UI Events
+
+        private void textBoxExamName_TextChanged(object sender, EventArgs e)
+        {
+            if (IsLoading) return;
+            Settings.SetString("exam.name", this.textBoxExamName.Text);
+        }
+
+        private void dateTimePickerExamDate_ValueChanged(object sender, EventArgs e)
+        {
+            if (IsLoading) return;
+            // Save the date in yyyy-MM-dd format.
+            Settings.SetString("exam.date", this.dateTimePickerExamDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+        }
+
+        #endregion
+
+    }
 }

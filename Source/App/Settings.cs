@@ -88,6 +88,10 @@ namespace WindowsVirtualDesktopHelper {
 			// Feature: showDesktopNameInIconTray
 			RegisterDefault("feature.showDesktopNameInIconTray", false);
 
+            // Feature: Exam Settings
+            RegisterDefault("exam.name", "", "The name of the upcoming exam.");
+            RegisterDefault("exam.date", "", "The date and time of the upcoming exam (ISO 8601 format).");
+
 		}
 
 		#endregion

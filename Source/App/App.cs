@@ -209,9 +209,55 @@ namespace WindowsVirtualDesktopHelper {
 							}
 						} else {
 							var form = new SwitchNotificationForm();
-							form.LabelText = this.CurrentVDDisplayName + "\n" + GetCurrentTime() + "\n" + "距离上饶辅警考试还有"  + GetCountdownDays("2025-04-20") + "天";
-							form.DisplayTimeMS = Settings.GetInt("feature.showDesktopSwitchOverlay.duration");
-							form.Show();
+							// If the switch notification form is not shown, show it
+							if(form.Visible == false) {
+								// Setup the form
+								// Get exam name, provide a default if empty
+								string examName = Settings.GetString("exam.name", "考试"); 
+								if (string.IsNullOrWhiteSpace(examName))
+								{
+									examName = "考试"; // Ensure examName is not empty for the message
+								}
+
+								// Get exam date string
+								string examDateString = Settings.GetString("exam.date", "");
+
+								// Prepare the final message part for the countdown
+								string countdownMessage;
+
+								DateTime examDate;
+								if (!string.IsNullOrEmpty(examDateString) &&
+									DateTime.TryParseExact(examDateString, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out examDate))
+								{
+									// Calculate the difference, considering only the date part
+									TimeSpan timeUntilExam = examDate.Date - DateTime.Today; // Compare dates only
+									int daysUntilExam = (int)timeUntilExam.TotalDays; // Use TotalDays and cast to int
+
+									if (daysUntilExam > 0)
+									{
+										countdownMessage = $"距离 {examName} 还有 {daysUntilExam} 天";
+									}
+									else if (daysUntilExam == 0)
+									{
+										countdownMessage = $"今天就是 {examName}！";
+									}
+									else
+									{
+										// If the date is in the past
+										countdownMessage = $"{examName} 已结束";
+									}
+								}
+								else
+								{
+									// Date parsing failed or setting is empty
+									countdownMessage = "考试日期未设置";
+								}
+
+								// Construct the final label text using string interpolation
+								form.LabelText = $"{this.CurrentVDDisplayName}\n{GetCurrentTime()}\n{countdownMessage}";
+								form.DisplayTimeMS = Settings.GetInt("feature.showDesktopSwitchOverlay.duration");
+								form.Show(); // Use standard Show() method. TopMost and NoActivate are handled by the form itself.
+							}
 						}
 					}));
 				}
