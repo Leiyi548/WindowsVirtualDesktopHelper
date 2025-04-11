@@ -209,7 +209,7 @@ namespace WindowsVirtualDesktopHelper {
 							}
 						} else {
 							var form = new SwitchNotificationForm();
-							form.LabelText = this.CurrentVDDisplayName;
+							form.LabelText = this.CurrentVDDisplayName + "\n" + GetCurrentTime() + "\n" + "距离上饶辅警考试还有"  + GetCountdownDays("2025-04-20") + "天";
 							form.DisplayTimeMS = Settings.GetInt("feature.showDesktopSwitchOverlay.duration");
 							form.Show();
 						}
@@ -737,6 +737,22 @@ namespace WindowsVirtualDesktopHelper {
 		public void OpenDonatePage() {
 			App.Instance.OpenURL("https://www.paypal.com/donate/?hosted_button_id=BG5FYMAHFG9V6");
 		}
+
+        public string GetCurrentTime()
+        {
+            return DateTime.Now.ToString("yyyy年MM月dd日 HH:mm");
+        }
+      
+        public string GetCountdownDays(string targetDateStr) {
+            try {
+                DateTime targetDate = DateTime.ParseExact(targetDateStr, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                DateTime currentDate = DateTime.Now.Date;
+                TimeSpan countdown = targetDate - currentDate;
+                return Math.Max(0, countdown.Days).ToString();
+            } catch (FormatException) {
+                throw new ArgumentException("日期格式不正确，请使用YYYY-MM-DD格式");
+            }
+        }
 
 		#endregion
 
