@@ -254,9 +254,12 @@ namespace WindowsVirtualDesktopHelper {
 								}
 
 								// Construct the final label text using string interpolation
-								form.LabelText = $"{this.CurrentVDDisplayName}\n{GetCurrentTime()}\n{countdownMessage}";
+								string labelText = $"{this.CurrentVDDisplayName}\n{GetCurrentTime()}\n{countdownMessage}";
+								form.LabelText = labelText; // Set the property (might still be useful internally)
 								form.DisplayTimeMS = Settings.GetInt("feature.showDesktopSwitchOverlay.duration");
-								form.Show(); // Use standard Show() method. TopMost and NoActivate are handled by the form itself.
+								// Apply formatting after setting text, passing the full text now
+								form.ApplyTextFormatting(labelText, this.CurrentVDDisplayName, Color.Aqua); // Example color: Aqua
+								form.Show(); // Use standard Show() method.
 							}
 						}
 					}));

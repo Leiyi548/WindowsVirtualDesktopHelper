@@ -1,5 +1,4 @@
-﻿
-namespace WindowsVirtualDesktopHelper {
+﻿namespace WindowsVirtualDesktopHelper {
     partial class SwitchNotificationForm {
         /// <summary>
         /// Required designer variable.
@@ -26,7 +25,7 @@ namespace WindowsVirtualDesktopHelper {
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             this.timerClose = new System.Windows.Forms.Timer(this.components);
-            this.label1 = new System.Windows.Forms.Label();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.timerAnimate = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
@@ -34,20 +33,24 @@ namespace WindowsVirtualDesktopHelper {
             // 
             this.timerClose.Tick += new System.EventHandler(this.timerClose_Tick);
             // 
-            // label1
+            // richTextBox1
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Light", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(9, 9);
-            this.label1.Margin = new System.Windows.Forms.Padding(0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(882, 412);
-            this.label1.TabIndex = 0;
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.richTextBox1.BackColor = System.Drawing.Color.Black;
+            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBox1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.richTextBox1.Font = new System.Drawing.Font("Segoe UI Light", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox1.ForeColor = System.Drawing.Color.White;
+            this.richTextBox1.Location = new System.Drawing.Point(9, 9);
+            this.richTextBox1.Margin = new System.Windows.Forms.Padding(0);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.richTextBox1.Size = new System.Drawing.Size(882, 412);
+            this.richTextBox1.TabIndex = 0;
+            this.richTextBox1.Text = "";
             // 
             // timerAnimate
             // 
@@ -61,7 +64,7 @@ namespace WindowsVirtualDesktopHelper {
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(900, 430);
             this.ControlBox = false;
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.richTextBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.MaximizeBox = false;
@@ -83,7 +86,7 @@ namespace WindowsVirtualDesktopHelper {
         #endregion
 
         private System.Windows.Forms.Timer timerClose;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Timer timerAnimate;
     }
 }

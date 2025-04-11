@@ -32,7 +32,8 @@ namespace WindowsVirtualDesktopHelper {
 			var fgColor = ColorTranslator.FromHtml(Settings.GetString("theme.overlay.overlayFG." + theme));
 			var bgColor = ColorTranslator.FromHtml(Settings.GetString("theme.overlay.overlayBG." + theme));
 			this.BackColor = bgColor;
-			this.label1.ForeColor = fgColor;
+			this.richTextBox1.ForeColor = fgColor;
+			this.richTextBox1.BackColor = bgColor;
 			
 			// Size
 			this.Width = Settings.GetInt("theme.overlay.width");
@@ -40,7 +41,7 @@ namespace WindowsVirtualDesktopHelper {
 
 			// Font
 			var font = new Font(Settings.GetString("theme.overlay.font"), Settings.GetFloat("theme.overlay.fontSize"), FontStyle.Regular);
-			this.label1.Font = font;
+			this.richTextBox1.Font = font;
 
 			// Set position
 			var positionOffset = 40;
@@ -101,14 +102,14 @@ namespace WindowsVirtualDesktopHelper {
 		// via https://stackoverflow.com/questions/2798245/click-through-in-c-sharp-form
 		private const int WS_EX_NOACTIVATE = 0x08000000;
 		private const int WS_EX_LAYERED = 0x80000;
-		private const int WS_EX_TRANSPARENT = 0x20;
+		// private const int WS_EX_TRANSPARENT = 0x20; // Temporarily disable for RichTextBox testing
 		protected override CreateParams CreateParams {
 			get {
 				var createParams = base.CreateParams;
 
 				createParams.ExStyle |= WS_EX_NOACTIVATE;
 				createParams.ExStyle |= WS_EX_LAYERED;
-				createParams.ExStyle |= WS_EX_TRANSPARENT;
+				// createParams.ExStyle |= WS_EX_TRANSPARENT; // Temporarily disable
 				return createParams;
 			}
 		}
@@ -128,7 +129,11 @@ namespace WindowsVirtualDesktopHelper {
 		}
 
 		private void SwitchNotificationForm_Load(object sender, EventArgs e) {
-			this.label1.Text = LabelText;
+			// Text setting and coloring is now handled by ApplyTextFormatting called from App.cs
+			// Center align text initially (optional, can be done in ApplyTextFormatting too)
+			this.richTextBox1.SelectAll();
+			this.richTextBox1.SelectionAlignment = HorizontalAlignment.Center;
+			this.richTextBox1.DeselectAll();
 		}
 
 		private void timerClose_Tick(object sender, EventArgs e) {
@@ -142,6 +147,7 @@ namespace WindowsVirtualDesktopHelper {
 			} else {
 				this.Close();
 			}
+			this.Opacity = this.animationOpacityCurrent / 100.0;
 		}
 
 		private void timerAnimate_Tick(object sender, EventArgs e) {
@@ -160,6 +166,37 @@ namespace WindowsVirtualDesktopHelper {
 				}
 			}
 			this.Opacity = this.animationOpacityCurrent / 100.0;
+		}
+
+		// Renamed and made public to be called from App.cs after LabelText is set
+		public void ApplyTextFormatting(string fullText, string displayName, Color displayNameColor)
+		{
+			// Use the passed fullText directly
+			// string fullText = this.richTextBox1.Text; // Don't read from control
+			if (string.IsNullOrEmpty(fullText) || string.IsNullOrEmpty(displayName))
+			{
+                this.richTextBox1.Text = fullText ?? ""; // Ensure text is set even if empty
+				return;
+			}
+
+            // Set the text first
+            this.richTextBox1.Text = fullText;
+
+			// Find the display name within the full text (should be at the start)
+			int displayNameIndex = fullText.IndexOf(displayName);
+			if (displayNameIndex == 0) // Ensure it's at the beginning
+			{
+				this.richTextBox1.Select(0, displayName.Length);
+				this.richTextBox1.SelectionColor = displayNameColor;
+			}
+			
+			// Center align the entire text
+			this.richTextBox1.SelectAll();
+			this.richTextBox1.SelectionAlignment = HorizontalAlignment.Center;
+
+			// Reset selection to avoid visual artifacts
+			this.richTextBox1.Select(0, 0);
+			this.richTextBox1.DeselectAll(); // Use DeselectAll as well
 		}
 	}
 }
