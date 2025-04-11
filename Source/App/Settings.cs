@@ -38,7 +38,7 @@ namespace WindowsVirtualDesktopHelper {
 			RegisterDefault("theme.icons.iconBG.light", "white");
 			RegisterDefault("theme.icons.iconFG.light", "black");
 			RegisterDefault("theme.overlay.width", 900, "With width in pixels of the overlay.");
-			RegisterDefault("theme.overlay.height", 430, "With height in pixels of the overlay.");
+			RegisterDefault("theme.overlay.height", 530, "With height in pixels of the overlay.");
 			RegisterDefault("theme.overlay.font", "Segoe UI Light", "Defines the font name to use for the overlay.");
 			RegisterDefault("theme.overlay.fontSize", 30, "Defines the font size to use for the overlay.");
 			RegisterDefault("theme.overlay.overlayBG.dark", "black");
@@ -52,14 +52,14 @@ namespace WindowsVirtualDesktopHelper {
 			RegisterDefault("feature.showSplashScreen.text", "Virtual Desktop Helper", "The splash text to show.");
 
 			// Feature: showPrevNextIcons
-			RegisterDefault("feature.showPrevNextIcons", true, "If enabled, a previous and next arrow will appear in the icons tray of Windows to allow easy switching between desktops.");
+			RegisterDefault("feature.showPrevNextIcons", false, "If enabled, a previous and next arrow will appear in the icons tray of Windows to allow easy switching between desktops.");
 			RegisterDefault("feature.showPrevNextIcons.automaticallyHidePrevNextOnBounds", false, "If enabled, the prev/next icon will automatically hide if there is no prev/next desktop.");
 			RegisterDefault("feature.showPrevNextIcons.nextChar", "\u203A", "Defines the character to use for next desktop icon (typically a unicode character like the chevron, for example \\xE101 = skip forward (player style), \xE111 = next (arrow style), \\xe26b = next (chevron style), \\u02C3 = next (chevron style), \\u203A = next (chevron style))");
 			RegisterDefault("feature.showPrevNextIcons.prevChar", "\u2039", "Defines the character to use for prev desktop icon (typically a unicode character like the chevron, for example \\xE100 = skip back (player style), \\xE112 = previous (arrow style), \\xe26c = previous (chevron style), \\u02C2 = previous (chevron style), \\u2039 = previous (chevron style))");
 
 			// Feature: showDesktopSwitchOverlay
 			RegisterDefault("feature.showDesktopSwitchOverlay", true);
-			RegisterDefault("feature.showDesktopSwitchOverlay.duration", 2000, "Defines the duration in milliseconds for a switch overlay to show. If set to zero, then the overlay is shown indefinately.");
+			RegisterDefault("feature.showDesktopSwitchOverlay.duration", 500, "Defines the duration in milliseconds for a switch overlay to show. If set to zero, then the overlay is shown indefinately.");
 			RegisterDefault("feature.showDesktopSwitchOverlay.animate", true);
 			RegisterDefault("feature.showDesktopSwitchOverlay.translucent", true);
 			RegisterDefault("feature.showDesktopSwitchOverlay.showOnAllMonitors", true);
