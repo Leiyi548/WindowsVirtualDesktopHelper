@@ -213,7 +213,7 @@ namespace WindowsVirtualDesktopHelper {
 							if(form.Visible == false) {
 								// Setup the form
 								// Get exam name, provide a default if empty
-								string examName = Settings.GetString("exam.name", "考试"); 
+								string examName = Settings.GetString("exam.name", "考试");
 								if (string.IsNullOrWhiteSpace(examName))
 								{
 									examName = "考试"; // Ensure examName is not empty for the message
@@ -224,41 +224,48 @@ namespace WindowsVirtualDesktopHelper {
 
 								// Prepare the final message part for the countdown
 								string countdownMessage;
+								string daysString = null; // Declare daysString here, initialize to null
 
 								DateTime examDate;
 								if (!string.IsNullOrEmpty(examDateString) &&
 									DateTime.TryParseExact(examDateString, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out examDate))
 								{
 									// Calculate the difference, considering only the date part
-									TimeSpan timeUntilExam = examDate.Date - DateTime.Today; // Compare dates only
-									int daysUntilExam = (int)timeUntilExam.TotalDays; // Use TotalDays and cast to int
+									TimeSpan timeUntilExam = examDate.Date - DateTime.Today;
+									int daysUntilExam = (int)timeUntilExam.TotalDays;
+									daysString = daysUntilExam.ToString(); // Assign here
 
 									if (daysUntilExam > 0)
 									{
-										countdownMessage = $"距离 {examName} 还有 {daysUntilExam} 天";
+										countdownMessage = $"距离 {examName} 还有 {daysString} 天";
 									}
 									else if (daysUntilExam == 0)
 									{
+										daysString = null; // No days number to color if it's today
 										countdownMessage = $"今天就是 {examName}！";
 									}
 									else
 									{
-										// If the date is in the past
+										daysString = null; // Assign null
 										countdownMessage = $"{examName} 已结束";
 									}
 								}
 								else
 								{
-									// Date parsing failed or setting is empty
+									// daysString is already null from declaration or previous assignments
 									countdownMessage = "考试日期未设置";
 								}
 
 								// Construct the final label text using string interpolation
 								string labelText = $"{this.CurrentVDDisplayName}\n{GetCurrentTime()}\n{countdownMessage}";
-								form.LabelText = labelText; // Set the property (might still be useful internally)
+								form.LabelText = labelText; // Set the property
 								form.DisplayTimeMS = Settings.GetInt("feature.showDesktopSwitchOverlay.duration");
-								// Apply formatting after setting text, passing the full text now
-								form.ApplyTextFormatting(labelText, this.CurrentVDDisplayName, Color.DeepSkyBlue); // Example color: Aqua
+								// Apply formatting after setting text
+								Color examNameColor = Color.Yellow;
+								Color daysColor = Color.Red; // Color for the days number
+								form.ApplyTextFormatting(labelText, this.CurrentVDDisplayName, Color.Aqua, 
+													 examName, examNameColor, 
+													 daysString, daysColor); // Pass daysString and its color
 								form.Show(); // Use standard Show() method.
 							}
 						}

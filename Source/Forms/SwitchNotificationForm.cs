@@ -179,37 +179,137 @@ namespace WindowsVirtualDesktopHelper {
 		}
 
 		// Renamed and made public to be called from App.cs after LabelText is set
-		public void ApplyTextFormatting(string fullText, string displayName, Color displayNameColor)
+		public void ApplyTextFormatting(string fullText, string displayName, Color displayNameColor, string examName, Color examNameColor, string daysString, Color daysColor)
 		{
-			// Use the passed fullText directly
-			// string fullText = this.richTextBox1.Text; // Don't read from control
-			if (string.IsNullOrEmpty(fullText) || string.IsNullOrEmpty(displayName))
+			if (string.IsNullOrEmpty(fullText))
 			{
-                this.richTextBox1.Text = fullText ?? ""; // Ensure text is set even if empty
+				this.richTextBox1.Text = "";
 				return;
 			}
 
-            // Set the text first
-            this.richTextBox1.Text = fullText;
+			// Get font info and colors
+			var defaultFontName = this.richTextBox1.Font.Name;
+			int rtfFontSize = (int)(this.richTextBox1.Font.SizeInPoints * 2);
+			var defaultColor = this.richTextBox1.ForeColor;
+			var bgColor = this.richTextBox1.BackColor;
 
-			// Find the display name within the full text (should be at the start)
-			int displayNameIndex = fullText.IndexOf(displayName);
-			if (displayNameIndex == 0) // Ensure it's at the beginning
+			// Find indices and lengths (handle null/empty strings)
+			int displayNameLength = displayName?.Length ?? 0;
+			int examNameIndex = (!string.IsNullOrEmpty(examName) && !string.IsNullOrEmpty(fullText)) ? fullText.IndexOf(examName) : -1;
+			int examNameLength = (examNameIndex != -1) ? examName.Length : 0;
+			int daysIndex = (!string.IsNullOrEmpty(daysString) && !string.IsNullOrEmpty(fullText)) ? fullText.IndexOf(daysString, (examNameIndex != -1 ? examNameIndex + examNameLength : displayNameLength)) : -1; // Search after exam name or display name
+			int daysLength = (daysIndex != -1) ? daysString.Length : 0;
+
+			// Build RTF String
+			var rtfBuilder = new System.Text.StringBuilder();
+			rtfBuilder.Append(@"{\rtf1\ansi\deff0");
+			rtfBuilder.Append($@"{{\fonttbl{{\f0 {defaultFontName};}}}}");
+			// Color table: 1=DefaultFG, 2=DisplayNameColor, 3=ExamNameColor, 4=DaysColor
+			rtfBuilder.Append($@"{{\colortbl ;{ColorToRtfFormat(defaultColor)};{ColorToRtfFormat(displayNameColor)};{ColorToRtfFormat(examNameColor)};{ColorToRtfFormat(daysColor)};}}");
+			// Default paragraph format: centered, font 0, size
+			rtfBuilder.Append($@"\pard\qc\f0\fs{rtfFontSize} ");
+
+			// Iterate through the full text and apply colors segment by segment
+			int currentPos = 0;
+			while (currentPos < fullText.Length)
 			{
-				this.richTextBox1.Select(0, displayName.Length);
-				this.richTextBox1.SelectionColor = displayNameColor;
-			}
-			
-			// Center align the entire text
-			this.richTextBox1.SelectAll();
-			this.richTextBox1.SelectionAlignment = HorizontalAlignment.Center;
+				int nextSegmentStart = fullText.Length; // Default to end
+				int segmentLength = 0;
+				int colorIndex = 1; // Default color
+				string segmentText = "";
 
-			// Reset selection to avoid visual artifacts
+				// Determine the next segment and its color
+				if (currentPos == 0 && displayNameLength > 0) // Display Name segment
+				{
+					segmentLength = displayNameLength;
+					colorIndex = 2;
+				}
+				else if (examNameIndex != -1 && currentPos == examNameIndex) // Exam Name segment
+				{
+					segmentLength = examNameLength;
+					colorIndex = 3;
+				}
+				else if (daysIndex != -1 && currentPos == daysIndex) // Days segment
+				{
+					segmentLength = daysLength;
+					colorIndex = 4;
+				}
+				else // Default color segment
+				{
+					// Find the beginning of the *next* colored segment
+					int nextSpecialStart = fullText.Length;
+					if (examNameIndex != -1 && examNameIndex > currentPos)
+						nextSpecialStart = Math.Min(nextSpecialStart, examNameIndex);
+					if (daysIndex != -1 && daysIndex > currentPos)
+						nextSpecialStart = Math.Min(nextSpecialStart, daysIndex);
+					
+					segmentLength = nextSpecialStart - currentPos;
+					colorIndex = 1;
+				}
+
+				// Ensure segment length is valid
+				segmentLength = Math.Max(0, Math.Min(segmentLength, fullText.Length - currentPos));
+				if (segmentLength == 0) break; // Prevent infinite loop if logic fails
+
+				segmentText = fullText.Substring(currentPos, segmentLength);
+
+				// Append the RTF for this segment
+				rtfBuilder.Append($@"{{\cf{colorIndex} "); // Start color scope
+				// Apply bold only if it's the days segment (colorIndex == 4)
+				if (colorIndex == 4)
+				{
+					rtfBuilder.Append(@"\b "); // Turn bold ON
+				}
+				else
+				{
+					rtfBuilder.Append(@"\b0 "); // Ensure bold is OFF for other segments
+				}
+				// Append text with Unicode/RTF escaping
+				foreach (char c in segmentText)
+				{
+					if (c == '\\') rtfBuilder.Append("\\\\");
+					else if (c == '{') rtfBuilder.Append("\\{");
+					else if (c == '}') rtfBuilder.Append("\\}");
+					else if (c == '\n') rtfBuilder.Append("\\par ");
+					else if (c <= 0x7f) rtfBuilder.Append(c);
+					else rtfBuilder.Append($"\\u{(int)c}?");
+				}
+				rtfBuilder.Append(@"} "); // End color/bold scope
+
+				// Move to the next position
+				currentPos += segmentLength;
+			}
+
+			// End RTF document
+			rtfBuilder.Append(@"}");
+
+			try
+			{
+				this.richTextBox1.Rtf = rtfBuilder.ToString();
+			}
+			catch (Exception ex)
+			{
+				Util.Logging.WriteLine($"Error applying RTF with multiple colors: {ex.Message}. Fallback to plain text.");
+				this.richTextBox1.Text = fullText; // Fallback
+			}
+
+			 // Re-apply properties
+			this.richTextBox1.BackColor = bgColor;
+			this.richTextBox1.ReadOnly = true;
+			this.richTextBox1.BorderStyle = BorderStyle.None;
+			this.richTextBox1.Cursor = Cursors.Default;
+
+			// Deselect all
 			this.richTextBox1.Select(0, 0);
-			this.richTextBox1.DeselectAll(); // Use DeselectAll as well
+			this.richTextBox1.DeselectAll();
 
 			// Hide the caret using SendMessage
 			SendMessage(this.richTextBox1.Handle, EM_HIDECARET, IntPtr.Zero, IntPtr.Zero);
+		}
+
+		private string ColorToRtfFormat(Color c)
+		{
+			return $"\\red{c.R}\\green{c.G}\\blue{c.B}";
 		}
 	}
 }
